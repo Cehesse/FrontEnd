@@ -1,0 +1,543 @@
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+/** end reset css**/
+
+body {
+	max-width: 1140px;
+	margin: auto;
+	font-family: 'Work Sans' ;
+	font-size: 14px;
+}
+
+header {
+	display: flex;
+	justify-content: space-between;
+	padding: 50px 0;
+}
+
+section {
+	padding: 50px 0
+}
+
+h1{
+	display: flex;
+	flex-direction: column;
+	font-family: 'Syne';
+	font-size: 22px;
+	font-weight: 800;
+	color: #B1663C;
+}
+
+h1 > span {
+	font-family: 'Work Sans';
+	font-size:10px;
+	letter-spacing: 0.1em;
+}
+
+h2{
+	font-family: 'Syne';
+	font-weight: 700;
+	font-size: 30px;
+	color: #1D6154;
+}
+
+nav ul {
+	display: flex;
+	align-items: center;
+	list-style-type: none;
+
+}
+nav li {
+	padding: 0 10px;
+	font-size: 1.2em;
+}
+
+li:hover {
+	color: #B1663C;
+}
+
+#introduction {
+	display: flex;
+	align-items: center;
+	position: relative;
+}
+
+#introduction figure {
+	flex: 1;
+}
+
+#introduction img {
+	display: block;
+	margin: auto;
+	width: 80%;
+}
+
+#introduction article {
+	flex: 1;
+}
+
+#introduction h2 {
+	margin-bottom: 1em;
+}
+
+#introduction p {
+	margin-bottom: 0.5em;
+}
+
+#portfolio {
+	position: relative;
+}
+
+#portfolio h2 {
+	text-align: center;
+	margin-bottom: 1em;
+}
+
+.gallery {
+	width: 100%;
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-column-gap: 20px;
+	grid-row-gap: 20px;
+}
+
+.gallery img {
+	width: 100%;	
+}
+
+#contact {
+	width: 50%;
+	margin: auto;
+}
+#contact > * {
+	text-align: center;
+}
+
+#contact h2{
+	margin-bottom: 20px;
+}
+
+#contact form {
+	text-align: left;
+	margin-top:30px;
+	display: flex;
+	flex-direction: column;
+}
+
+#contact input{
+	height: 50px;
+	font-size: 1.2em;
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+}
+
+#contact label {
+	margin: 2em 0 1em 0;
+}
+
+#contact textarea {
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+}
+
+input[type="submit"],
+.modal__addWork{
+	font-family: 'Syne';
+	font-weight: 700;
+	color: white;
+	background-color: #1D6154;
+	margin : 2em auto ;
+	width: 180px;
+	text-align: center;
+	border-radius: 60px ;
+}
+
+button[type="filter"]{
+	font-family: 'Syne';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 16px;
+	border-radius: 60px;
+	border: solid 1px #1D6154;
+	background-color: white;
+	padding: 8px 16px;
+	color: #1D6154;
+}
+
+footer nav ul {
+	display: flex;
+	justify-content: flex-end;
+	margin: 2em;
+}
+
+.filters{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	column-gap: 8px;
+	padding: 24px 0 48px 0;
+}
+
+#filteractif{
+	background-color: #1D6154;
+	color: white;
+}
+
+a{
+	color: black;
+	text-decoration: none;
+}
+
+.nav_icone{
+	height: 20px;
+}
+
+.login{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 5% 35% 50% 35%;
+}
+
+.login__form{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding-top: 32px;
+}
+
+.login__unit{
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	row-gap: 8px;
+}
+
+.login__forget{
+	text-decoration: underline;
+	font-weight: 500;;
+}
+
+.login__input{
+	width: 370px;
+	height: 48px;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	border: transparent;
+}
+
+.login__label{
+	font-weight: 500;
+}
+
+.login__submit,
+.input-form input,
+.input-form select {
+	height: 48px;
+	font-size: 16px;
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	margin-bottom: 16px;
+	width: 100%;
+}
+
+header, main{
+	background-color: #FFFEF8;
+	padding: 56px 152px 0 152px;
+}
+
+footer nav{ 
+	background-color: white;
+	width: 100%;
+	padding: 24px;
+}
+
+li > span {
+	font-weight:600;
+}
+
+.login__form > p,
+.login__unit > p
+ {
+	padding: 0 0 16px 0;
+	font-weight:700;
+	color: red;
+}
+
+#header_black {
+	height: 56px;
+	background-color: black;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
+
+#header_black div{
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	height: 40px;
+	color: white;
+	font-weight: 400;
+	font-size: 16px;
+	padding: 0 16px;
+}
+
+#header_black div i {
+	padding: 0 8px;
+}
+
+#header_black button{
+	height: 40px;
+	background-color: white;
+	font-weight: 500;
+	font-size: 14px;
+	border-radius: 60px;
+	padding: 0 16px;
+}
+
+#edit-photo {
+	position: absolute;
+	bottom: 10px;
+	left: 5%;
+}
+
+#edit-bio {
+	position: absolute;
+	top: 30px;
+	left: 50%;
+}
+
+#edit-works {
+	position: absolute;
+	top: 60px;
+	left: 65%;
+}
+
+.edit{
+	display: flex;
+	flex-direction: row;
+}
+
+.edit i{
+	margin-right: 8px;
+}
+
+.modal{
+	position: fixed;
+	display: none;
+	align-items: center;
+	justify-content: center;
+	top:0;
+	left:0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal__wrapper{
+	width: 35%;
+	max-width: 630px;
+	height: auto;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	background: white;
+	border-radius: 10px;
+	position: relative;
+	padding: 48px 104px;
+}
+
+#modal_close{
+	position: absolute;
+	top: 5%;
+	right: 5%;
+	background-color: transparent;
+	border-color: transparent;
+	font-size: 16px;
+}
+
+#modal_back{
+	position: absolute;
+	top: 5%;
+	left: 5%;
+	background-color: transparent;
+	border-color: transparent;
+	font-size: 16px;
+}
+
+#modal-works__title{
+	text-align: center;
+	margin-bottom: 48px;
+	font-size: 26px;
+	color: black;
+	font-style: normal;
+	font-weight: 400;
+}
+
+.modal__gallery{
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+	grid-column-gap: 8px;
+	grid-row-gap: 8px;
+	margin-bottom: 24px;
+}
+
+.modal__gallery img{
+	height: 104px;
+	width: 100%;
+	object-fit: cover;
+}
+
+.modal__gallery figure{
+	position: relative;
+}
+
+.modal__gallery button{
+	height: 16px;
+	width: 16px;
+	border-radius: 2px;
+	background-color: transparent;
+	background-color: black;
+	padding: 4px;
+}
+
+.fa-trash-can,
+.modal__gallery button{
+	position: absolute;
+	top: 8%;
+	right: 10%;
+	color: white;
+	font-size: 9px;
+}
+
+.modal__bar{
+	height: 1px;
+	background-color: hsla(0, 0%, 70%, 1);
+	margin-top: 48px;
+	margin-bottom: 48px;
+}
+
+.modal__addWork{
+	padding: 8px 24px;
+	width: 50%;
+	border-color: transparent;
+	margin: 0 auto;
+}
+
+.modal__deleteGallery{
+	font-family: 'Syne';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 14px;
+	line-height: 17px;	
+	text-align: center;
+	color: #D65353;
+	margin-top: 32px;
+}
+
+/* .modal__form{
+	margin-bottom: 72px;
+} */
+
+.input-img{
+	height: 168px;
+	width: 100%;
+	background-color: #E8F1F7;
+	border-radius: 3px;
+	padding: 18px 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 32px;
+}
+
+.input-img__icone{
+	font-size: 48px;
+	color: #B9C5CC;
+	margin-bottom: 32px;
+}
+
+#input-image{
+	visibility: hidden;
+	height: 4px;
+}
+
+ .input-img__button{
+	height: 40px;
+	width: 168px;
+	background-color:#CBD6DC;
+	border-radius: 60px;
+	color: #306685;
+	font-weight: 500;
+	font-size: 14px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+ .input-img__text{
+	font-size: 10px;
+}
+
+.input-form{
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+ .input-form label{
+	font-weight: 500;
+	font-size: 14px;
+	margin-bottom: 8px;
+}
+
