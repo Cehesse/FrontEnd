@@ -1,5 +1,5 @@
 // Récupération des fonctions
-import {transformLog,editingModalCleanWorks} from "./dom_fct.js";
+import {transformLog,editingModal} from "./dom_fct.js";
     
 // Stockage de l'utilisateur et redirection sur l'index
 export function activeLogin(User, Token, Page) {
@@ -33,12 +33,17 @@ export function validateEmail(email){
 
 //Fonction openModalWorks
 export function openModalWorks() {
-    editingModalCleanWorks();
+    
+    // Editer la modal
+    editingModal();
+    // Obtenir la modal et l'afficher
     let modalWorks = document.getElementById("modal-works");
-    let modalclose = document.getElementById("modal_close");
     modalWorks.style.display = "flex";
+    // Fermer la modal lors d'un click
     modalWorks.addEventListener("click", closeModalWorks);
-    modalclose.addEventListener("click", closeModalWorks);
+    // Fermer la modal lors d'un click sur la croix
+    closeModalXmark();
+    //Empecher la modal de se fermer lors d'un click dans son contenu
     let modalContent = document.getElementById("modal_content");
     modalContent.addEventListener("click", stopPropagation);
 };
@@ -54,6 +59,11 @@ export function closeModalWorks() {
 
 function stopPropagation(e){
     e.stopPropagation();
+};
+
+export function closeModalXmark(){
+    let modalClose = document.getElementById("modal_close");
+    modalClose.addEventListener("click", closeModalWorks);
 };
 
 

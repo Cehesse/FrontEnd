@@ -1,6 +1,6 @@
 // Récupération des fonctions
 import {getCategories, getWorks} from "./api_fct.js";
-import {genererFilters, genererWorks, manageFilters, editingIndex, transformLog, editingModalCleanWorks, editingModalNewWorks} from "./dom_fct.js";
+import {genererFilters, genererWorks, manageFilters, editingIndex, transformLog} from "./dom_fct.js";
 import {logout, openModalWorks} from "./base_fct.js";
 
 //Page index pre login

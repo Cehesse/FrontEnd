@@ -1,6 +1,6 @@
 // Récupération des fonctions
-import {getWorks, getCategories, deleteWork} from "./api_fct.js";
-import {openModalWorks, closeModalWorks} from "./base_fct.js";
+import {getWorks, getCategories, deleteWork, addWork} from "./api_fct.js";
+import {closeModalXmark} from "./base_fct.js";
 
 // Fonction de création des filtres
 export function genererFilters(Array){
@@ -21,26 +21,28 @@ export function genererFilters(Array){
 // Fonction de création des projets
 export function genererWorks(Array){
     
+    // Récupération de l'élément du DOM parents des projets
+    const sectionGallery = document.querySelector("#portfolio .gallery");
+    sectionGallery.innerHTML="";
+
+        //Boucle de création des projets
         for (let i = 0; i < Array.length; i++) {
             
-            const unit = Array[i];
+        const unit = Array[i];
+
+        // Création des balises pour un projet
+        const workElement = document.createElement("figure");
+        sectionGallery.appendChild(workElement);
     
-            // Récupération de l'élément du DOM parents des projets
-            const sectionGallery = document.querySelector("#portfolio .gallery");
-            
-            // Création des balises pour un projet
-            const workElement = document.createElement("figure");
-            sectionGallery.appendChild(workElement);
+        // Création des balises du projet
+        const imageElement = document.createElement("img");
+        imageElement.src = unit.imageUrl;
+        workElement.appendChild(imageElement);
     
-            // Création des balises du projet
-            const imageElement = document.createElement("img");
-            imageElement.src = unit.imageUrl;
-            workElement.appendChild(imageElement);
-    
-            const textElement = document.createElement("figcaptation");
-            textElement.innerHTML = unit.title;
-            workElement.appendChild(textElement); 
-            }
+        const textElement = document.createElement("figcaptation");
+        textElement.innerHTML = unit.title;
+        workElement.appendChild(textElement); 
+        }
  };
     
 // Fonction de gestion des filtres
@@ -164,7 +166,7 @@ function edit(){
 };
 
 //Fonction pour editer la modal de gestion des travaux
-export async function editingModalCleanWorks(){
+export async function editingModal(){
 
     const modalContent = document.getElementById("modal_content");
     modalContent.innerHTML ="";
@@ -193,68 +195,21 @@ export async function editingModalCleanWorks(){
     const bar = modalContent.appendChild(document.createElement("div"));
     bar.classList.add("modal__bar");
     const addwork = modalContent.appendChild(document.createElement("button"));
-    addwork.classList.add("modal__addWork");
+    addwork.classList.add("button__addWork");
     addwork.setAttribute("id","modal__addWork");
     addwork.textContent = "Ajouter une photo"
     const deleteGallery = modalContent.appendChild(document.createElement("h2"));
     deleteGallery.classList.add("modal__deleteGallery");
     deleteGallery.textContent = "Supprimer la galerie"
 
-    //Supression d'un travail
+    //Supression d'un projet
     deleteWorks();
 
-    //Ajouter un travail
-    let addWorks = document.getElementById("modal__addWork");
-    addWorks.addEventListener("click", editingModalNewWorks);
+    //Ajouter un projet
+    addWorks();
 };
 
-//Fonction pour editer la modale pour l'ajout de travaux
-export async function editingModalNewWorks(){
-
-    const modalContent = document.getElementById("modal_content");
-    modalContent.innerHTML = `
-        <button id="modal_back"><i class="fa-solid fa-arrow-left"></i></button>
-        <button id="modal_close"><i class="fa-solid fa-xmark"></i></button>
-        <h1 id="modal-works__title">Ajouter photo</h1>
-        <form class="modal_form">
-            <div class="input-img">
-                <i class="fa-regular fa-image input-img__icone"></i>
-                <label for="input-image" class="input-img__button">+ Ajouter photo</label>
-                <input type="file" id="input-image" accept="image/png, image/jpeg">
-                <p class="input-img__text">jpg, png: 4mo max</p>
-            </div>
-            <div class="input-form">
-                <label for="input-title">Titre</label>
-                <input type="text" id="input-title">
-            </div>
-            <div class="input-form">
-                <label for="input-categories">Catégorie</label>
-                <select id="input-categories"></select>
-            </div>
-        </form>
-        <div class="modal__bar"></div>
-        <button class="modal__addWork">Valider</button>
-        `
-    //Back
-    let backEditWorks = document.getElementById("modal_back");
-    backEditWorks.addEventListener("click", openModalWorks)
-
-    //Fermer la modale avec la croix
-    let modalClose = document.getElementById("modal_close");
-    modalClose.addEventListener("click", closeModalWorks);
-
-    //Ajout des categories existantes au select et attribution de l'ID en value
-    let categories = await getCategories();
-    categories.unshift({id: 0, name: "Choisir une catégorie"});
-    let categoriesContent = document.getElementById("input-categories");
-    for (let i = 0; i < categories.length ; i++){
-        let option = categoriesContent.appendChild(document.createElement("option"));
-        option.textContent = categories[i].name
-        option.setAttribute("value",categories[i].id);
-    }
-};
-
-// Fonction de suppresion d'un travail
+// Fonction de suppresion d'un projet
 async function deleteWorks(){
     let trashs = document.getElementsByClassName("trash");
 
@@ -263,7 +218,9 @@ async function deleteWorks(){
                 event.preventDefault();
                 let response = await deleteWork(trashs[i].value);
                 if (response.ok) {
-                    alert("Supression réussi");
+                    editingModal();
+                    let works = await getWorks();
+                    genererWorks(works);
                 }
                 else{
                     errorDelete(response.status);
@@ -272,8 +229,8 @@ async function deleteWorks(){
         }
 };
 
-// Fonction d'affichage des erreurs de supression
-export function errorDelete(codeApi){
+// Fonction d'affichage des erreurs de supression d'un projet
+function errorDelete(codeApi){
     switch (codeApi) {
         case 401:
             alert("Suppression non autorisée");
@@ -285,3 +242,95 @@ export function errorDelete(codeApi){
             alert("Une erreur et survenu contacter l'administrateur du site")
           }
 };
+
+// Fonction d'ajout d'un projet
+function addWorks(){
+    let addWorks = document.getElementById("modal__addWork");
+    addWorks.addEventListener("click", editingModalNewWorks);
+};
+
+//Fonction pour editer la modale pour l'ajout de travaux
+async function editingModalNewWorks(){
+
+    const modalContent = document.getElementById("modal_content");
+    modalContent.innerHTML = `
+        <button id="modal_back"><i class="fa-solid fa-arrow-left"></i></button>
+        <button id="modal_close"><i class="fa-solid fa-xmark"></i></button>
+        <h1 id="modal-works__title">Ajouter photo</h1>
+        <form class="modal_form" id="addWork" name="addWork">
+            <div class="input-img">
+                <i class="fa-regular fa-image input-img__icone"></i>
+                <label for="input-image" id="input-image__button" class="input-img__button" required>+ Ajouter photo</label>
+                <input type="file" id="input-image" accept="image/png, image/jpeg">
+                <p class="input-img__text">jpg, png: 4mo max</p>
+            </div>
+            <div class="input-form">
+                <label for="input-title">Titre</label>
+                <input type="text" id="input-title" required>
+            </div>
+            <div class="input-form">
+                <label for="input-categories">Catégorie</label>
+                <select id="input-categories"></select>
+            </div>
+            <div class="modal__bar">
+            </div>
+            <div>
+            <button type=button" id="addWork-Api" class="button__addWork" required>Valider</button>
+            </div>       
+        </form>
+        `
+    //Gestion du Back
+    let backEditWorks = document.getElementById("modal_back");
+    backEditWorks.addEventListener("click", editingModal);
+
+    //Fermer la modale avec la croix
+    closeModalXmark();
+
+    //Ajout des categories existantes au select et attribution de l'ID en value
+    let categories = await getCategories();
+    categories.unshift({id: -1, name: "Choisir une catégorie"});
+    let categoriesContent = document.getElementById("input-categories");
+    for (let i = 0; i < categories.length ; i++){
+        let option = categoriesContent.appendChild(document.createElement("option"));
+        option.textContent = categories[i].name
+        option.setAttribute("value",categories[i].id);
+    }
+
+    //Desactivation du bouton valider
+    let addWorksApi = document.getElementById("addWork-Api");
+    addWorksApi.disabled = true;
+
+    // Formulaire Valide
+    let form = document.forms["addWork"];
+    let formElements = form.elements;
+        // On parcourt les contrôles du formulaire
+        for (let i = 0; i < formElements.length; i++) {
+            formElements[i].addEventListener("change", function() {
+
+                let img = document.getElementById("input-image");
+                let imgTitle = document.getElementById("input-title");
+                let imgCategory = document.getElementById("input-categories");
+
+                let imgValue = document.getElementById("input-image").files[0];
+                console.log(imgValue);
+                let imgTitleValue = imgTitle.value;
+                let imgCategoryValue = imgCategory.value;
+                // Si les element sont bon on reactive le bouton valider
+                if(imgValue != undefined && imgTitleValue != "" && imgCategoryValue > 0){
+                    addWorksApi.disabled = false;
+                }
+                else{
+                    addWorksApi.disabled = true;
+                }    
+            })
+        };
+/*     let formData = new FormData()
+    formData.append('image', img)
+    formData.append('title', imgTitleValue)
+    formData.append('category', imgCategoryValue)
+    console.log(formData); */
+}
+
+
+   
+

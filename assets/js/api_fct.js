@@ -29,7 +29,7 @@ export async function postLogin(email, password) {
     return promiselogin;
 };
 
-// Suppresion d'un travail
+// Suppresion d'un projet
 export async function deleteWork(workId) {
     const response = await fetch(`${urlApi}/works/${workId}`, {
         method: "DELETE",
@@ -40,3 +40,15 @@ export async function deleteWork(workId) {
     return response
 };
 
+// Ajout d'un projet
+export async function addWork(newWork) {
+    const response = await fetch(`${urlApi}/works`, {
+        method: "POST",
+        body: newWork,
+        headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+    })
+    return response
+}
