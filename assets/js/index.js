@@ -1,14 +1,15 @@
 // Récupération des fonctions
-import {getCategories, getWorks} from "./api_fct.js";
-import {genererFilters, genererWorks, manageFilters, editingIndex, transformLog} from "./dom_fct.js";
-import {logout, openModalWorks} from "./base_fct.js";
+import {getWorks} from "./api_fct.js";
+import {generateFilters, generateWorks, manageFilters, editingIndex, transformLog} from "./dom_fct.js";
+import {logout} from "./base_fct.js";
+import {openModalWorks} from "./modal_fct.js";
 
 //Page index pre login
 
     // Récupération des projets dans l'API
-    let works = await getWorks();
+    const works = await getWorks();
 
-    //Création du tableau de filtres
+    //Création du tableau des filtres
     let categories = works.map(works => works.category);
     categories = categories.map(categories => categories.name);
     categories.unshift("Tous");
@@ -16,9 +17,11 @@ import {logout, openModalWorks} from "./base_fct.js";
     categories = [...NewSet];
 
     //Generation du contenu initial
-    genererFilters(categories);
-    genererWorks(works);
-    let filtres = document.getElementsByClassName("filter");
+    generateFilters(categories);
+    generateWorks(works);
+
+    //Coloration du filtre initial
+    const filtres = document.getElementsByClassName("filter");
     filtres[0].setAttribute("id", "filteractif");
 
     //Gestion des filtres
@@ -35,7 +38,7 @@ import {logout, openModalWorks} from "./base_fct.js";
         editingIndex();
         transformLog("logout");
 
-        //Modal des travaux
+        //Modal des travaux [m3]
         let editWorks = document.getElementById("edit-works");
         editWorks.addEventListener("click", openModalWorks);
         
@@ -44,9 +47,4 @@ import {logout, openModalWorks} from "./base_fct.js";
         log.addEventListener("click", () => {
             logout();
         });
-    }
-
-
-
-
-
+    };

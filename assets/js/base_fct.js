@@ -1,14 +1,14 @@
 // Récupération des fonctions
-import {transformLog,editingModal} from "./dom_fct.js";
+import {transformLog, editingModal} from "./dom_fct.js";
     
-// Stockage de l'utilisateur et redirection sur l'index
+// Stockage de l'utilisateur et redirection sur une page
 export function activeLogin(User, Token, Page) {
     sessionStorage.setItem("user", User);
     sessionStorage.setItem("token", Token);
     window.location.replace(Page);
 };
 
-// Vidange de la session
+// Vidange de la session et changement du texte du log
 export function logout() {
     sessionStorage.removeItem("user");
     sessionStorage.removeItem("token");
@@ -16,52 +16,17 @@ export function logout() {
 };
 
 // Adresse mail valide
-function AdresseEmail(mail){
+function isAdressEmail(mail){
     var mailReg = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/i);
     return mailReg.test(mail);
 };
 
-// Coloration selon mail valide ou non
-export function validateEmail(email){
-    if (AdresseEmail(email.value)){
+// Backgroud color selon format du mail valide ou non
+export function isAdressEmailBackground(email){
+    if (isAdressEmail(email.value)){
         email.style.background = "#BCF1A7";
     }
     else{
         email.style.background = "#E47C48";
     }
-};
-
-//Fonction openModalWorks
-export function openModalWorks() {
-    
-    // Editer la modal
-    editingModal();
-    // Obtenir la modal et l'afficher
-    let modalWorks = document.getElementById("modal-works");
-    modalWorks.style.display = "flex";
-    // Fermer la modal lors d'un click
-    modalWorks.addEventListener("click", closeModalWorks);
-    //Empecher la modal de se fermer lors d'un click dans son contenu
-    let modalContent = document.getElementById("modal_content");
-    modalContent.addEventListener("click", stopPropagation);
-};
-
-//Fonction closeModalWorks
-export function closeModalWorks() {
-    let modalWorks = document.getElementById("modal-works");
-    modalWorks.style.display = "none";
-    modalWorks.removeEventListener("click", closeModalWorks);
-    let modalContent = document.getElementById("modal_content");
-    modalContent.removeEventListener("click", stopPropagation);
-};
-
-//Fonction stopPropagation
-function stopPropagation(e){
-    e.stopPropagation();
-};
-
-//Fonction de fermeture de la modal sur la croix
-export function closeModalXmark(){
-    let modalClose = document.getElementById("modal_close");
-    modalClose.addEventListener("click", closeModalWorks);
 };

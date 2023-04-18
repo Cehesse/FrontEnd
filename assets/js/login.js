@@ -1,40 +1,37 @@
 // Récupération des fonctions
-import {postLogin,errorLogin} from "./api_fct.js";
+import {postLogin, errorLogin} from "./api_fct.js";
 import {cleanErrorLogin} from "./dom_fct.js";
-import {activeLogin, validateEmail} from "./base_fct.js";
+import {activeLogin, isAdressEmailBackground} from "./base_fct.js";
+
+//Variables
+const email = document.getElementById("email");
+const password = document.getElementById("password");
+const loginForm = document.getElementById("login__form");
 
 //Verifier que le mail est au bon format
-let email = document.getElementById("email");
-let password = document.getElementById("password");
-email.addEventListener("keyup", (event) => {
-    validateEmail(email);
+email.addEventListener("keyup", (e) => {
+    e.preventDefault();
+    isAdressEmailBackground(email);
 });
 
 //Effacer les messages si une erreur et survenu pour l'essai suivant
-email.addEventListener("focus", (event) => {
+email.addEventListener("focus", (e) => {
+    e.preventDefault();
     cleanErrorLogin();
 });
-password.addEventListener("focus", (event) => {
+password.addEventListener("focus", (e) => {
+    e.preventDefault();
     cleanErrorLogin();
 });
 
-//Connexion
+//Connexion de l'utilisateur
 
-const loginForm = document.getElementById("login__form");
-
-loginForm.addEventListener("submit", async (event) => {
-
-    event.preventDefault();
-
-    //Récuperer le mail et le mot de passe saisie
-    const email = document.getElementById("email");
-    const password = document.getElementById("password");
-
-    //Requete API et traitement
-    let response = await postLogin(email.value, password.value);
-
+loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    //Requete de connexion et traitement
+    const response = await postLogin(email.value, password.value);
     if (response.ok) {
-        let responseArray = await response.json();
+        const responseArray = await response.json();
         activeLogin(responseArray.userId,responseArray.token, "../index.html");
     }
     else{

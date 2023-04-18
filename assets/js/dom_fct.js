@@ -1,46 +1,44 @@
 // Récupération des fonctions
 import {getWorks, getCategories, deleteWork, addWork, errorDelete, erroraddWorks} from "./api_fct.js";
-import {closeModalXmark} from "./base_fct.js";
+import {closeModalXmark} from "./modal_fct.js";
 
-// Fonction de création des filtres
-export function genererFilters(Array){
-    
-        // Récupération de l'élément du DOM parents des filtres
+// Fonction de création de bouton filtres
+export function generateFilters(array){
+
+        // Récupération de l'élément du DOM parents des projets
         const portfolioFilters = document.querySelector("#portfolio .filters");
-    
-        // Création des filtres selon le tableau en entrée
-        for (let i = 0; i < Array.length; i++) {
-            const portfolioFilter = document.createElement("button");
-            portfolioFilter.setAttribute("type","filter");
-            portfolioFilter.classList.add("filter");
-            portfolioFilter.innerHTML = Array[i];
-            portfolioFilters.appendChild(portfolioFilter);
+
+        // Création des filtres selon le tableau en entrée et le parent
+        for (let i = 0; i < array.length; i++) {
+            const Filter = document.createElement("button");
+            Filter.setAttribute("type","filter");
+            Filter.classList.add("filter");
+            Filter.innerHTML = array[i];
+            portfolioFilters.appendChild(Filter);
         }  
 };
     
-// Fonction de création des projets
-export function genererWorks(Array){
+// Fonction de création des projets selon un tableau
+export function generateWorks(array){
     
     // Récupération de l'élément du DOM parents des projets
     const sectionGallery = document.querySelector("#portfolio .gallery");
     sectionGallery.innerHTML="";
 
         //Boucle de création des projets
-        for (let i = 0; i < Array.length; i++) {
+        for (let i = 0; i < array.length; i++) {
             
-        const unit = Array[i];
-
         // Création des balises pour un projet
         const workElement = document.createElement("figure");
         sectionGallery.appendChild(workElement);
     
         // Création des balises du projet
         const imageElement = document.createElement("img");
-        imageElement.src = unit.imageUrl;
+        imageElement.src = array[i].imageUrl;
         workElement.appendChild(imageElement);
     
         const textElement = document.createElement("figcaptation");
-        textElement.innerHTML = unit.title;
+        textElement.innerHTML = array[i].title;
         workElement.appendChild(textElement); 
         }
  };
@@ -57,19 +55,16 @@ export function manageFilters(arrayFilter, arrayWorks){
                 }
             //Attribution du nouveau filtre actif
             arrayFilter[i].setAttribute("id", "filteractif");
-            // Creation d'un tableau avec uniquement les travaux de la catégorie clicker    
-            let filterWorks = arrayWorks.filter(arrayWorks => arrayWorks.categoryId == i);
-            if (i == 0) { filterWorks = arrayWorks}
-            // Vidange de la galery et generation des traveaux selon filtres
-            document.querySelector(".gallery").innerHTML = "";
-            genererWorks(filterWorks);
+            // Creation d'un tableau avec uniquement les projets de la catégorie clicker    
+            let filterWorks = arrayWorks.filter(arrayWorks => arrayWorks.categoryId === i);
+            if (i === 0) {filterWorks = arrayWorks}
+            // Generation des projets selon filtres
+            generateWorks(filterWorks);
           });
         }
  };
 
-
-
-// Fonction pour effacer les erreurs afficher
+// Fonction de réinitialisation des messages d'erreur de login
 export function cleanErrorLogin(){
     document.getElementById("error__email").textContent = ""
     document.getElementById("error__login").textContent = ""
@@ -84,7 +79,7 @@ export function transformLog(logText){
     log.textContent = logText
 };
 
-// Fonctions de création des élements permetant la modification de la page
+// Fonction de création des eléments de gestion admin
 export function editingIndex(){
 
     // Masquage des filtres
@@ -112,10 +107,10 @@ export function editingIndex(){
     update.textContent = "publier les changements"
 
     // Ajout des elements "modifier"
-    edit();
+    linkEdit();
 };
 
-function edit(){
+function linkEdit(){
 
     // Placement dans le DOM d'un lien pour les "modifier"
     let edit = document.querySelector("#introduction figure");
@@ -131,7 +126,7 @@ function edit(){
     m3.setAttribute("id","edit-works");
     m3.setAttribute("href","#modal-works");
 
-    //Creation d'un tableau avec les div et création du contenu des div
+    //Creation d'un tableau avec les liens et création du contenu des div
     edit = [m1, m2, m3]    
 
     edit.forEach(function(item){
@@ -200,16 +195,17 @@ export async function editingModal(){
 
 // Fonction de suppresion d'un projet
 async function deleteWorks(){
+
     let trashs = document.getElementsByClassName("trash");
 
     for (let i = 0; i < trashs.length ; i++){
-            trashs[i].addEventListener("click", async (event) => {
-                event.preventDefault();
+            trashs[i].addEventListener("click", async (e) => {
+                e.preventDefault();
                 let response = await deleteWork(trashs[i].value);
                 if (response.ok) {
                     editingModal();
                     let works = await getWorks();
-                    genererWorks(works);
+                    generateWorks(works);
                 }
                 else{
                     errorDelete(response.status);
@@ -224,7 +220,7 @@ function windowsAddWorks(){
     addWorks.addEventListener("click", editingModalNewWorks);
 };
 
-//Fonction pour editer la modale pour l'ajout de travaux
+//Fonction pour editer la modale pour l'ajout de projets
 async function editingModalNewWorks(){
 
     const modalContent = document.getElementById("modal_content");
@@ -287,22 +283,25 @@ async function addWorks(){
 
     // On parcourt les changements du formulaire
     for (let i = 0; i < formElements.length; i++) {
-        formElements[i].addEventListener("change", function() {
-
-            //Afectation des valeurs au changement
+        
+        formElements[i].addEventListener("change", (e) => {
+            e.preventDefault();
+            //Affectation des valeurs au changement
             const imgValue = document.getElementById("input-image").files[0];
             let imgTitleValue = imgTitle.value;
             let imgCategoryValue = imgCategory.value;
 
-            // Remplacer par une miniature au chargement d'une image
+            // Remplacer par une miniature au chargement d'une image (Element 0)
+            if(i === 0){
             let imagemini = document.getElementById("imagemini");
             let button = document.getElementById("input-image__button");
             let url = URL.createObjectURL(imgValue);
             imagemini.src = url;
             button.style.display = "none";
+            }
             
-            // Si les elements sont valide on reactive le bouton valider et creation ou modification du formulaire a poster
-            if(imgValue != undefined && imgTitleValue != "" && imgCategoryValue > 0){
+            // Création ou modification du formulaire a poster et activation du bouton valider
+            if(imgValue != undefined && imgTitleValue != "" && imgCategoryValue > 0 ){
                 addWorksApi.disabled = false;
                 formData.set("image", imgValue);
                 formData.set("title", imgTitleValue);
@@ -314,20 +313,16 @@ async function addWorks(){
         });
     };
     // Post du formulaire et ajout en BBD
-    addWorksApi.addEventListener("click", async function(event){
-        event.preventDefault();
+    addWorksApi.addEventListener("click", async (e) => {
+        e.preventDefault();
         let response = await addWork(formData);
         if (response.ok) {
             editingModal();
             let works = await getWorks();
-            genererWorks(works);
+            generateWorks(works);
                 }
         else{
             erroraddWorks(response.status);
             }
     }); 
 };
-
-
-   
-
