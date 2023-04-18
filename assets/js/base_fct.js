@@ -41,8 +41,6 @@ export function openModalWorks() {
     modalWorks.style.display = "flex";
     // Fermer la modal lors d'un click
     modalWorks.addEventListener("click", closeModalWorks);
-    // Fermer la modal lors d'un click sur la croix
-    closeModalXmark();
     //Empecher la modal de se fermer lors d'un click dans son contenu
     let modalContent = document.getElementById("modal_content");
     modalContent.addEventListener("click", stopPropagation);
@@ -57,13 +55,13 @@ export function closeModalWorks() {
     modalContent.removeEventListener("click", stopPropagation);
 };
 
+//Fonction stopPropagation
 function stopPropagation(e){
     e.stopPropagation();
 };
 
+//Fonction de fermeture de la modal sur la croix
 export function closeModalXmark(){
     let modalClose = document.getElementById("modal_close");
     modalClose.addEventListener("click", closeModalWorks);
 };
-
-

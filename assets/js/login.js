@@ -1,6 +1,6 @@
 // Récupération des fonctions
-import {postLogin} from "./api_fct.js";
-import {errorLogin,cleanErrorLogin} from "./dom_fct.js";
+import {postLogin,errorLogin} from "./api_fct.js";
+import {cleanErrorLogin} from "./dom_fct.js";
 import {activeLogin, validateEmail} from "./base_fct.js";
 
 //Verifier que le mail est au bon format
@@ -41,4 +41,3 @@ loginForm.addEventListener("submit", async (event) => {
         errorLogin(response.status);
     }
 });
-

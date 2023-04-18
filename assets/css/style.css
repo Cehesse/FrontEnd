@@ -506,6 +506,7 @@ li > span {
 	align-items: center;
 	justify-content: center;
 	margin-bottom: 32px;
+	position: relative;
 }
 
 .input-img__icone{
@@ -546,5 +547,11 @@ li > span {
 	font-weight: 500;
 	font-size: 14px;
 	margin-bottom: 8px;
+}
+
+#imagemini{
+	height: 200px;
+	widows: 200px;
+	position: absolute;
 }
 

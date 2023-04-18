@@ -5,15 +5,15 @@ import {logout, openModalWorks} from "./base_fct.js";
 
 //Page index pre login
 
-    // Récupération des categories dans l'API et traitement des doublons potentiel
-    let categories = await getCategories();
+    // Récupération des projets dans l'API
+    let works = await getWorks();
+
+    //Création du tableau de filtres
+    let categories = works.map(works => works.category);
     categories = categories.map(categories => categories.name);
     categories.unshift("Tous");
     let NewSet = new Set (categories);
     categories = [...NewSet];
-
-    // Récupération des projets dans l'API
-    let works = await getWorks();
 
     //Generation du contenu initial
     genererFilters(categories);
@@ -31,7 +31,7 @@ import {logout, openModalWorks} from "./base_fct.js";
 
     if(token != null && user != null){
         
-        //Modifier la page si un utilisateur est connecter et modal
+        //Modifier la page si un utilisateur est connecter
         editingIndex();
         transformLog("logout");
 

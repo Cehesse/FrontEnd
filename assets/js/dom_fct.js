@@ -1,5 +1,5 @@
 // Récupération des fonctions
-import {getWorks, getCategories, deleteWork, addWork} from "./api_fct.js";
+import {getWorks, getCategories, deleteWork, addWork, errorDelete, erroraddWorks} from "./api_fct.js";
 import {closeModalXmark} from "./base_fct.js";
 
 // Fonction de création des filtres
@@ -67,21 +67,7 @@ export function manageFilters(arrayFilter, arrayWorks){
         }
  };
 
-// Fonction d'affichage des erreurs de login
-export function errorLogin(codeApi){
-    switch (codeApi) {
-        case 401:
-            document.getElementById("error__login").textContent = "Le mot de passe est incorect"
-            document.getElementById("error__submit").textContent = "Erreur dans l'identifiant ou le mot de passe"
-            break;
-        case 404:
-            document.getElementById("error__email").textContent = "Le mail saisie n'existe pas"
-            document.getElementById("error__submit").textContent = "Erreur dans l'identifiant ou le mot de passe"
-            break;
-        default:
-            alert("Code erreur inconnu")
-          }
-};
+
 
 // Fonction pour effacer les erreurs afficher
 export function cleanErrorLogin(){
@@ -202,11 +188,14 @@ export async function editingModal(){
     deleteGallery.classList.add("modal__deleteGallery");
     deleteGallery.textContent = "Supprimer la galerie"
 
+    // Fermer la modal lors d'un click sur la croix
+    closeModalXmark();
+
     //Supression d'un projet
     deleteWorks();
 
-    //Ajouter un projet
-    addWorks();
+    //Ouvrir la modal d'ajout d'un projet
+    windowsAddWorks();
 };
 
 // Fonction de suppresion d'un projet
@@ -229,22 +218,8 @@ async function deleteWorks(){
         }
 };
 
-// Fonction d'affichage des erreurs de supression d'un projet
-function errorDelete(codeApi){
-    switch (codeApi) {
-        case 401:
-            alert("Suppression non autorisée");
-            break;
-        case 404:
-            alert("Comportement inattendu")
-            break;
-        default:
-            alert("Une erreur et survenu contacter l'administrateur du site")
-          }
-};
-
-// Fonction d'ajout d'un projet
-function addWorks(){
+// Fonction d'ouverture d'ajout d'un projet
+function windowsAddWorks(){
     let addWorks = document.getElementById("modal__addWork");
     addWorks.addEventListener("click", editingModalNewWorks);
 };
@@ -260,13 +235,14 @@ async function editingModalNewWorks(){
         <form class="modal_form" id="addWork" name="addWork">
             <div class="input-img">
                 <i class="fa-regular fa-image input-img__icone"></i>
-                <label for="input-image" id="input-image__button" class="input-img__button" required>+ Ajouter photo</label>
-                <input type="file" id="input-image" accept="image/png, image/jpeg">
+                <label for="input-image" id="input-image__button" class="input-img__button">+ Ajouter photo</label>
+                <input type="file" id="input-image" name="image" accept="image/png, image/jpeg">
                 <p class="input-img__text">jpg, png: 4mo max</p>
+                <img src="#" alt="" id="imagemini">
             </div>
             <div class="input-form">
                 <label for="input-title">Titre</label>
-                <input type="text" id="input-title" required>
+                <input type="text" id="input-title">
             </div>
             <div class="input-form">
                 <label for="input-categories">Catégorie</label>
@@ -275,7 +251,7 @@ async function editingModalNewWorks(){
             <div class="modal__bar">
             </div>
             <div>
-            <button type=button" id="addWork-Api" class="button__addWork" required>Valider</button>
+            <input type="submit" id="addWork-Api" class="button__addWork" disabled value="Valider"></input>
             </div>       
         </form>
         `
@@ -283,7 +259,7 @@ async function editingModalNewWorks(){
     let backEditWorks = document.getElementById("modal_back");
     backEditWorks.addEventListener("click", editingModal);
 
-    //Fermer la modale avec la croix
+    // Fermer la modal lors d'un click sur la croix
     closeModalXmark();
 
     //Ajout des categories existantes au select et attribution de l'ID en value
@@ -296,40 +272,61 @@ async function editingModalNewWorks(){
         option.setAttribute("value",categories[i].id);
     }
 
-    //Desactivation du bouton valider
-    let addWorksApi = document.getElementById("addWork-Api");
-    addWorksApi.disabled = true;
+    // Ajout d'un projet
+    addWorks();
+};
 
-    // Formulaire Valide
+async function addWorks(){
+
     let form = document.forms["addWork"];
     let formElements = form.elements;
-        // On parcourt les contrôles du formulaire
-        for (let i = 0; i < formElements.length; i++) {
-            formElements[i].addEventListener("change", function() {
+    let addWorksApi = document.getElementById("addWork-Api");
+    let imgTitle = document.getElementById("input-title");
+    let imgCategory = document.getElementById("input-categories");
+    let formData = new FormData();
 
-                let img = document.getElementById("input-image");
-                let imgTitle = document.getElementById("input-title");
-                let imgCategory = document.getElementById("input-categories");
+    // On parcourt les changements du formulaire
+    for (let i = 0; i < formElements.length; i++) {
+        formElements[i].addEventListener("change", function() {
 
-                let imgValue = document.getElementById("input-image").files[0];
-                console.log(imgValue);
-                let imgTitleValue = imgTitle.value;
-                let imgCategoryValue = imgCategory.value;
-                // Si les element sont bon on reactive le bouton valider
-                if(imgValue != undefined && imgTitleValue != "" && imgCategoryValue > 0){
-                    addWorksApi.disabled = false;
+            //Afectation des valeurs au changement
+            const imgValue = document.getElementById("input-image").files[0];
+            let imgTitleValue = imgTitle.value;
+            let imgCategoryValue = imgCategory.value;
+
+            // Remplacer par une miniature au chargement d'une image
+            let imagemini = document.getElementById("imagemini");
+            let button = document.getElementById("input-image__button");
+            let url = URL.createObjectURL(imgValue);
+            imagemini.src = url;
+            button.style.display = "none";
+            
+            // Si les elements sont valide on reactive le bouton valider et creation ou modification du formulaire a poster
+            if(imgValue != undefined && imgTitleValue != "" && imgCategoryValue > 0){
+                addWorksApi.disabled = false;
+                formData.set("image", imgValue);
+                formData.set("title", imgTitleValue);
+                formData.set("category", imgCategoryValue); 
+            }
+            else{
+                addWorksApi.disabled = true;
+            }    
+        });
+    };
+    // Post du formulaire et ajout en BBD
+    addWorksApi.addEventListener("click", async function(event){
+        event.preventDefault();
+        let response = await addWork(formData);
+        if (response.ok) {
+            editingModal();
+            let works = await getWorks();
+            genererWorks(works);
                 }
-                else{
-                    addWorksApi.disabled = true;
-                }    
-            })
-        };
-/*     let formData = new FormData()
-    formData.append('image', img)
-    formData.append('title', imgTitleValue)
-    formData.append('category', imgCategoryValue)
-    console.log(formData); */
-}
+        else{
+            erroraddWorks(response.status);
+            }
+    }); 
+};
 
 
    
