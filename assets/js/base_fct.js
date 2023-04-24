@@ -1,5 +1,5 @@
 // Récupération des fonctions
-import {transformLog, editingModal} from "./dom_fct.js";
+import {transformLog} from "./dom_fct.js";
     
 // Stockage de l'utilisateur et redirection sur une page
 export function activeLogin(User, Token, Page) {
