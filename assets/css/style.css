@@ -384,7 +384,7 @@ li > span {
 }
 
 .modal__wrapper{
-	width: 35%;
+	width: 630px;
 	max-width: 630px;
 	height: auto;
 	display: flex;
@@ -432,7 +432,7 @@ li > span {
 }
 
 .modal__gallery img{
-	height: 104px;
+	height: auto;
 	width: 100%;
 	object-fit: cover;
 }
